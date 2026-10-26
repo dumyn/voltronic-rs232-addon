@@ -7,17 +7,21 @@ RUN apk add --no-cache \
     bash \
     jq \
     tzdata \
+    python3 \
+    make \
+    g++ \
+    linux-headers \
     nodejs=24.22.1-r0 \
     npm=11.12.1-r0
 
-RUN npm install -g --no-audit --no-fund --unsafe-perm node-red@5.0.7 \
+RUN npm install -g --no-audit --no-fund node-red@5.0.7 \
     && npm cache clean --force
 
 COPY . /addon
 WORKDIR /addon
 
 RUN npm init -y >/dev/null 2>&1 || true \
-    && npm install --no-audit --no-fund --unsafe-perm ws \
+    && npm install --no-audit --no-fund ws \
     && chmod a+x /addon/run.sh
 
 ENTRYPOINT ["/addon/run.sh"]
