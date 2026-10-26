@@ -4,11 +4,12 @@ FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Actualizar los paquetes del sistema para evitar
-# conflictos entre musl y musl-dev.
-RUN apk upgrade --no-cache
+# Actualizar los índices y los paquetes del sistema
+# para evitar conflictos entre versiones de Alpine.
+RUN apk update && apk upgrade --no-cache
 
-# Instalar dependencias y herramientas de compilación.
+# Instalar Node.js, npm y las herramientas necesarias
+# para compilar módulos nativos de SerialPort.
 RUN apk add --no-cache \
     bash \
     jq \
@@ -20,10 +21,16 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
+# Verificar las herramientas de compilación.
+RUN python3 --version \
+    && node --version \
+    && npm --version
+
 # Instalar Node-RED.
 RUN npm install -g --no-audit --no-fund node-red@5.0.7 \
     && npm cache clean --force
 
+# Copiar el complemento.
 COPY . /addon
 WORKDIR /addon
 
@@ -33,5 +40,3 @@ RUN npm init -y >/dev/null 2>&1 || true \
     && chmod a+x /addon/run.sh
 
 ENTRYPOINT ["/addon/run.sh"]
-
-
