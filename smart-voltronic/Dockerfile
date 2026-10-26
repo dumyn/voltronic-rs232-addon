@@ -1,3 +1,4 @@
+
 ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.0.7
 FROM ${BUILD_FROM}
 
@@ -11,8 +12,8 @@ RUN apk add --no-cache \
     make \
     g++ \
     linux-headers \
-    nodejs=24.22.1-r0 \
-    npm=11.12.1-r0
+    nodejs \
+    npm
 
 RUN npm install -g --no-audit --no-fund node-red@5.0.7 \
     && npm cache clean --force
@@ -25,3 +26,4 @@ RUN npm init -y >/dev/null 2>&1 || true \
     && chmod a+x /addon/run.sh
 
 ENTRYPOINT ["/addon/run.sh"]
+
