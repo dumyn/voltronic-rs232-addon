@@ -4,6 +4,11 @@ FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# Actualizar los paquetes del sistema para evitar
+# conflictos entre musl y musl-dev.
+RUN apk upgrade --no-cache
+
+# Instalar dependencias y herramientas de compilación.
 RUN apk add --no-cache \
     bash \
     jq \
@@ -15,15 +20,18 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
+# Instalar Node-RED.
 RUN npm install -g --no-audit --no-fund node-red@5.0.7 \
     && npm cache clean --force
 
 COPY . /addon
 WORKDIR /addon
 
+# Instalar las dependencias de la aplicación.
 RUN npm init -y >/dev/null 2>&1 || true \
     && npm install --no-audit --no-fund ws \
     && chmod a+x /addon/run.sh
 
 ENTRYPOINT ["/addon/run.sh"]
+
 
