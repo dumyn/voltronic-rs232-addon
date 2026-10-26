@@ -1,11 +1,9 @@
-
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.0.7
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:latest
 FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Instalar las dependencias usando la imagen base sin actualizar
-# todos los paquetes del sistema.
+# Instalar dependencias necesarias.
 RUN apk add --no-cache \
     bash \
     jq \
