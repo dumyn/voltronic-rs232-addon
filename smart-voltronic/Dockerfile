@@ -7,7 +7,7 @@ RUN apk add --no-cache \
     bash \
     jq \
     tzdata \
-    nodejs=24.18.1-r0 \
+    nodejs=24.22.1-r0 \
     npm=11.12.1-r0
 
 RUN npm install -g --no-audit --no-fund --unsafe-perm node-red@5.0.7 \
